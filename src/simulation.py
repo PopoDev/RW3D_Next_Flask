@@ -86,8 +86,9 @@ class Simulation:
                              delta_t,
                              dispersion_coefficient)
 
+        x, y, z = self.rw.get_positions()
         self.simulation = pd.DataFrame({"step": 0, "x": x, "y": y, "z": z})
-    
+
     def animate(self, steps=10):
         for i in range(steps):
             self.rw.update()

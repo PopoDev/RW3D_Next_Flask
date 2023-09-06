@@ -1,6 +1,5 @@
 from flask import Flask
-app = Flask(__name__)
+from api.views import views
 
-@app.route("/api/python")
-def hello_world():
-    return "<p>Hello, World!</p>"
+app = Flask(__name__)
+app.register_blueprint(views, url_prefix='/api')
