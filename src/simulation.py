@@ -1,6 +1,5 @@
 import math
 
-from matplotlib.figure import Figure
 import numpy as np
 import pandas as pd
 pd.options.plotting.backend = "plotly"
@@ -87,19 +86,7 @@ class Simulation:
                              delta_t,
                              dispersion_coefficient)
 
-        ##############################
-        # Graphics
-        ##############################
-        self.fig = Figure()
-        self.ax = self.fig.add_subplot(111, projection='3d')
-
-        x, y, z = self.rw.get_positions()
-        self.ax.scatter(x, y, z)
         self.simulation = pd.DataFrame({"step": 0, "x": x, "y": y, "z": z})
-
-    
-    def get_figure(self):
-        return self.fig
     
     def animate(self, steps=10):
         for i in range(steps):
