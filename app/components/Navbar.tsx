@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 import Link from "next/link";
 import XMark from "./XMark";
@@ -13,7 +14,7 @@ export default function Navbar() {
     { text: "About", href: "/about" },
   ];
 
-  const [active, setActive] = useState("Home");
+  const pathname = usePathname();
   const [toggle, setToggle] = useState(false);
 
   const handleSmallScreen = () => {
@@ -31,9 +32,8 @@ export default function Navbar() {
             <li className="flex items-center text-center" key={nav.href}>
               <Link
                 href={nav.href}
-                onClick={() => setActive(nav.text)}
                 className={`cursor-pointer py-4 px-8 hover:bg-slate-800 ${
-                  active === nav.text ? "text-white" : "text-dimWhite"
+                  pathname === nav.href ? "text-white" : "text-dimWhite"
                 }`}
               >
                 {nav.text}
@@ -63,11 +63,10 @@ export default function Navbar() {
                     href={nav.href}
                     onClick={() => {
                       handleSmallScreen();
-                      setActive(nav.text);
                     }}
                     className={`
                     cursor-pointer p-4 w-full hover:bg-slate-600
-                    ${active === nav.text ? "text-white" : "text-dimWhite"}
+                    ${pathname === nav.href ? "text-white" : "text-dimWhite"}
                     `}
                   >
                     {nav.text}
