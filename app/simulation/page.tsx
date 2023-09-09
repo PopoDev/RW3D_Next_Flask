@@ -12,6 +12,7 @@ import {
   Button,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
+import Plot from "react-plotly.js";
 
 export default function SimulationPage() {
   const [numberParticles, setNumberParticles] = useState<number | null>(1000); // [1, 10000]
@@ -31,8 +32,19 @@ export default function SimulationPage() {
 
   const [init, setInit] = useState("center"); // [center, random]
 
+  const [df, setDf] = useState<Map<string, Data>>(new Map()); // Store data
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  interface Data {
+    x: number[];
+    y: number[];
+    z: number[];
+  }
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
 
     console.log("Number of particles:", numberParticles);
     console.log("Steps:", steps);
@@ -41,24 +53,45 @@ export default function SimulationPage() {
     console.log("Dispersion:", [at, al, dm]);
     console.log("Init:", init);
 
-    fetch("/api/sim", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        number_particles: numberParticles,
-        steps: steps,
-        dim: [xAxis, yAxis, zAxis],
-        v: [vx, vy, vz],
-        init: init,
-      }),
-    }).then((response) => {
+    try {
+      const response = await fetch("/api/sim", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          number_particles: numberParticles,
+          steps: steps,
+          dim: [xAxis, yAxis, zAxis],
+          v: [vx, vy, vz],
+          init,
+        }),
+      });
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      return response.json();
-    });
+
+      const data = await response.json();
+
+      const df: Map<string, Data> = new Map(
+        Object.entries(data).map(([key, value]) => [
+          key,
+          {
+            x: JSON.parse((value as any).x),
+            y: JSON.parse((value as any).y),
+            z: JSON.parse((value as any).z),
+          },
+        ])
+      );
+      console.log(df.get("0")?.x);
+
+      setDf(df);
+    } catch (error: any) {
+      setError("Error fetching data: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange =
@@ -238,6 +271,117 @@ export default function SimulationPage() {
                 Start Simulation
               </p>
             </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <div>
+              {isLoading && <p>Loading...</p>}
+              {df.size > 0 && (
+                <Plot
+                  data={[
+                    {
+                      x: df.get("0")?.x,
+                      y: df.get("0")?.y,
+                      z: df.get("0")?.z,
+                      mode: "markers",
+                      type: "scatter3d",
+                      marker: {
+                        size: 5,
+                      },
+                    },
+                  ]}
+                  layout={{
+                    title: "3D Random Walk Simulation",
+                    width: 800,
+                    height: 600,
+                    scene: {
+                      xaxis: { range: [0, xAxis] },
+                      yaxis: { range: [0, yAxis] },
+                      zaxis: { range: [0, zAxis] },
+                      aspectmode: "cube",
+                    },
+                    sliders: [
+                      {
+                        active: 0,
+                        steps: Array.from(df.keys()).map((index) => ({
+                          label: `Step ${index}`,
+                          method: "animate",
+                          args: [
+                            [`frame${index}`],
+                            {
+                              mode: "immediate",
+                              transition: { duration: 0 },
+                              frame: { duration: 0, redraw: true },
+                            },
+                          ],
+                        })),
+                        x: 0.1,
+                        xanchor: "left",
+                        y: 0,
+                        yanchor: "top",
+                        pad: { t: 50, r: 10 },
+                      },
+                    ],
+                    updatemenus: [
+                      {
+                        buttons: [
+                          {
+                            args: [
+                              null, // Set this to null to keep the current frame
+                              {
+                                fromcurrent: true,
+                                transition: {
+                                  duration: 0,
+                                },
+                                frame: {
+                                  duration: 200,
+                                },
+                              },
+                            ],
+                            label: "Play",
+                            method: "animate",
+                          },
+                          {
+                            args: [
+                              [null],
+                              {
+                                frame: { duration: 0 },
+                                mode: "immediate",
+                              },
+                            ],
+                            label: "Pause",
+                            method: "animate",
+                          },
+                        ],
+                        direction: "left",
+                        pad: { r: 10, t: 87 },
+                        showactive: false,
+                        type: "buttons",
+                        x: 0.1,
+                        xanchor: "right",
+                        y: 0,
+                        yanchor: "top",
+                      },
+                    ],
+                  }}
+                  frames={
+                    Array.from(df.keys()).map((index) => ({
+                      name: `frame${index}`,
+                      data: [
+                        {
+                          x: df.get(index)?.x,
+                          y: df.get(index)?.y,
+                          z: df.get(index)?.z,
+                          mode: "markers",
+                          type: "scatter3d",
+                        },
+                      ],
+                    })) as any
+                  }
+                  useResizeHandler={true}
+                  config={{ responsive: true }}
+                />
+              )}
+            </div>
           </Grid>
         </Grid>
       </form>
