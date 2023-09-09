@@ -12,7 +12,14 @@ import {
   Button,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
-import Plot from "react-plotly.js";
+import dynamic from "next/dynamic";
+
+const Plot = dynamic(
+  () => {
+    return import("react-plotly.js");
+  },
+  { ssr: false }
+);
 
 export default function SimulationPage() {
   const [numberParticles, setNumberParticles] = useState<number | null>(1000); // [1, 10000]
@@ -74,13 +81,20 @@ export default function SimulationPage() {
 
       const data = await response.json();
 
+      const parse = (value: string) => {
+        return value
+          .slice(1, -1)
+          .split(",")
+          .map((x) => parseFloat(x));
+      };
+
       const df: Map<string, Data> = new Map(
         Object.entries(data).map(([key, value]) => [
           key,
           {
-            x: JSON.parse((value as any).x),
-            y: JSON.parse((value as any).y),
-            z: JSON.parse((value as any).z),
+            x: parse((value as any).x),
+            y: parse((value as any).y),
+            z: parse((value as any).z),
           },
         ])
       );
