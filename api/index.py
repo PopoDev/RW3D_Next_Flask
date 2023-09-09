@@ -1,10 +1,5 @@
-from flask import Flask, request
-from src.simulation import Simulation
+from flask import Flask
+from api.views import views
 
 app = Flask(__name__)
-
-@app.route('/api/df')
-def df():
-    sim = Simulation(100, dim=(100, 100, 100), init="center")
-    df = sim.animate(steps=10)
-    return df.to_json(orient="records")
+app.register_blueprint(views, url_prefix='/api')
