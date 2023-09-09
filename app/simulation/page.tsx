@@ -12,14 +12,7 @@ import {
   Button,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
-import dynamic from "next/dynamic";
-
-const Plot = dynamic(
-  () => {
-    return import("react-plotly.js");
-  },
-  { ssr: false }
-);
+import AnimPlot from "../components/AnimPlot";
 
 export default function SimulationPage() {
   const [numberParticles, setNumberParticles] = useState<number | null>(1000); // [1, 10000]
@@ -81,20 +74,22 @@ export default function SimulationPage() {
 
       const data = await response.json();
 
+      /*
       const parse = (value: string) => {
         return value
           .slice(1, -1)
           .split(",")
           .map((x) => parseFloat(x));
       };
+      */
 
       const df: Map<string, Data> = new Map(
         Object.entries(data).map(([key, value]) => [
           key,
           {
-            x: parse((value as any).x),
-            y: parse((value as any).y),
-            z: parse((value as any).z),
+            x: JSON.parse((value as any).x),
+            y: JSON.parse((value as any).y),
+            z: JSON.parse((value as any).z),
           },
         ])
       );
@@ -287,113 +282,10 @@ export default function SimulationPage() {
             </Button>
           </Grid>
           <Grid item xs={12}>
-            <div>
+            <div className="w-full">
               {isLoading && <p>Loading...</p>}
               {df.size > 0 && (
-                <Plot
-                  data={[
-                    {
-                      x: df.get("0")?.x,
-                      y: df.get("0")?.y,
-                      z: df.get("0")?.z,
-                      mode: "markers",
-                      type: "scatter3d",
-                      marker: {
-                        size: 5,
-                      },
-                    },
-                  ]}
-                  layout={{
-                    title: "3D Random Walk Simulation",
-                    width: 800,
-                    height: 600,
-                    scene: {
-                      xaxis: { range: [0, xAxis] },
-                      yaxis: { range: [0, yAxis] },
-                      zaxis: { range: [0, zAxis] },
-                      aspectmode: "cube",
-                    },
-                    sliders: [
-                      {
-                        active: 0,
-                        steps: Array.from(df.keys()).map((index) => ({
-                          label: `Step ${index}`,
-                          method: "animate",
-                          args: [
-                            [`frame${index}`],
-                            {
-                              mode: "immediate",
-                              transition: { duration: 0 },
-                              frame: { duration: 0, redraw: true },
-                            },
-                          ],
-                        })),
-                        x: 0.1,
-                        xanchor: "left",
-                        y: 0,
-                        yanchor: "top",
-                        pad: { t: 50, r: 10 },
-                      },
-                    ],
-                    updatemenus: [
-                      {
-                        buttons: [
-                          {
-                            args: [
-                              null, // Set this to null to keep the current frame
-                              {
-                                fromcurrent: true,
-                                transition: {
-                                  duration: 0,
-                                },
-                                frame: {
-                                  duration: 200,
-                                },
-                              },
-                            ],
-                            label: "Play",
-                            method: "animate",
-                          },
-                          {
-                            args: [
-                              [null],
-                              {
-                                frame: { duration: 0 },
-                                mode: "immediate",
-                              },
-                            ],
-                            label: "Pause",
-                            method: "animate",
-                          },
-                        ],
-                        direction: "left",
-                        pad: { r: 10, t: 87 },
-                        showactive: false,
-                        type: "buttons",
-                        x: 0.1,
-                        xanchor: "right",
-                        y: 0,
-                        yanchor: "top",
-                      },
-                    ],
-                  }}
-                  frames={
-                    Array.from(df.keys()).map((index) => ({
-                      name: `frame${index}`,
-                      data: [
-                        {
-                          x: df.get(index)?.x,
-                          y: df.get(index)?.y,
-                          z: df.get(index)?.z,
-                          mode: "markers",
-                          type: "scatter3d",
-                        },
-                      ],
-                    })) as any
-                  }
-                  useResizeHandler={true}
-                  config={{ responsive: true }}
-                />
+                <AnimPlot df={df} xAxis={xAxis} yAxis={yAxis} zAxis={zAxis} />
               )}
             </div>
           </Grid>
