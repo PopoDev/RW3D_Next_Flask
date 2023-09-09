@@ -31,14 +31,34 @@ export default function SimulationPage() {
 
   const [init, setInit] = useState("center"); // [center, random]
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     console.log("Number of particles:", numberParticles);
     console.log("Steps:", steps);
     console.log("Dim:", [xAxis, yAxis, zAxis]);
     console.log("V:", [vx, vy, vz]);
     console.log("Dispersion:", [at, al, dm]);
     console.log("Init:", init);
+
+    fetch("/api/sim", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        number_particles: numberParticles,
+        steps: steps,
+        dim: [xAxis, yAxis, zAxis],
+        v: [vx, vy, vz],
+        init: init,
+      }),
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    });
   };
 
   const handleChange =
