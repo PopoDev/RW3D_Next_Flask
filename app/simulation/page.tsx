@@ -30,66 +30,14 @@ export default function SimulationPage() {
 
   const [init, setInit] = useState("center"); // [center, random]
 
-  const [df, setDf] = useState<Map<string, Data>>(new Map()); // Store data
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  interface Data {
-    x: number[];
-    y: number[];
-    z: number[];
-  }
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsLoading(true);
-
     console.log("Number of particles:", numberParticles);
     console.log("Steps:", steps);
     console.log("Dim:", [xAxis, yAxis, zAxis]);
     console.log("V:", [vx, vy, vz]);
     console.log("Dispersion:", [at, al, dm]);
     console.log("Init:", init);
-
-    try {
-      const response = await fetch("/api/sim", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          number_particles: numberParticles,
-          steps: steps,
-          dim: [xAxis, yAxis, zAxis],
-          v: [vx, vy, vz],
-          init,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json();
-
-      const df: Map<string, Data> = new Map(
-        Object.entries(data).map(([key, value]) => [
-          key,
-          {
-            x: JSON.parse((value as any).x),
-            y: JSON.parse((value as any).y),
-            z: JSON.parse((value as any).z),
-          },
-        ])
-      );
-      console.log(df.get("0")?.x);
-
-      setDf(df);
-    } catch (error: any) {
-      setError("Error fetching data: " + error.message);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const handleChange =
