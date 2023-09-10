@@ -2,7 +2,6 @@ import math
 
 import numpy as np
 import pandas as pd
-pd.options.plotting.backend = "plotly"
 
 from src.random_walk import RandomWalk
 

@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-pd.options.plotting.backend = "plotly"
-
 
 class RandomWalk:
     def __init__(self, particles, vx=0, vy=0, vz=0, delta_t=1, dispersion_coefficient=np.eye(3)):
