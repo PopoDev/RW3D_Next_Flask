@@ -9,10 +9,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
-import AnimPlot from "../components/AnimPlot";
 
 export default function SimulationPage() {
   const [numberParticles, setNumberParticles] = useState<number | null>(1000); // [1, 10000]
@@ -73,15 +71,6 @@ export default function SimulationPage() {
       }
 
       const data = await response.json();
-
-      /*
-      const parse = (value: string) => {
-        return value
-          .slice(1, -1)
-          .split(",")
-          .map((x) => parseFloat(x));
-      };
-      */
 
       const df: Map<string, Data> = new Map(
         Object.entries(data).map(([key, value]) => [
@@ -264,30 +253,6 @@ export default function SimulationPage() {
                 <MenuItem value="random">Random</MenuItem>
               </Select>
             </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              type="submit"
-              variant="contained"
-              style={{
-                marginTop: "20px",
-                padding: "16px",
-                width: "270px",
-                backgroundColor: "rgb(34 197 94)",
-              }}
-            >
-              <p className="text-2xl font-bold font-mono text-black">
-                Start Simulation
-              </p>
-            </Button>
-          </Grid>
-          <Grid item xs={12}>
-            <div className="w-full">
-              {isLoading && <p>Loading...</p>}
-              {df.size > 0 && (
-                <AnimPlot df={df} xAxis={xAxis} yAxis={yAxis} zAxis={zAxis} />
-              )}
-            </div>
           </Grid>
         </Grid>
       </form>

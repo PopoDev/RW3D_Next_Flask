@@ -11,7 +11,11 @@
 
 ## Introduction
 
-This is a hybrid Next.js + Python app that uses Next.js as the frontend and Flask as the API backend. One great use case of this is to write Next.js apps that use Python AI libraries on the backend.
+This is a hybrid Next.js + Python app that uses Next.js as the frontend and Flask as the API backend. Deployment is made on Vercel with two different projects to handle the Serverless Function maximum size.
+
+Frontend: https://github.com/PopoDev/RW3D_Frontend
+
+Backend: https://github.com/PopoDev/RW3D_Backend
 
 ## How It Works
 
