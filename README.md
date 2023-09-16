@@ -1,21 +1,39 @@
 <p align="center">
-  <a href="https://nextjs-flask-starter.vercel.app/">
-    <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" height="96">
-    <h3 align="center">Next.js Flask Starter</h3>
+  <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" height="96">
+  <a href="https://randomwalk3d.vercel.app/">
+    <h3 align="center">3D Random Walk Simulation</h3>
   </a>
 </p>
 
-<p align="center">Simple Next.js boilerplate that uses <a href="https://flask.palletsprojects.com/">Flask</a> as the API backend.</p>
+<p align="center">Web app using 
+<a href="https://nextjs.org/">Next.js</a> in the frontend and 
+<a href="https://flask.palletsprojects.com/">Flask</a> as the API backend. </p>
+<p align="center">This project is deployed thanks to <a href="https://vercel.com/solutions/nextjs">Vercel</a>.</p>
 
 <br/>
 
+# 3D Random Walk Simulation
+
+### Website: [https://randomwalk3d.vercel.app/](https://randomwalk3d.vercel.app/)
+
+### Abstract:
+
+The primary aim of this project is to develop a computer tool for simulating the movement of pollutants within a fluid medium. Pollutants are defined as contaminants that, once exceeding a certain threshold, adversely affect the environment. The computer program is built upon two fundamental concepts: random walk theory from the realm of mathematics and pollutant transport principles rooted in physics. Throughout this work, we establish the inherent connection between these two concepts and highlight their intriguing features. The ultimate goal of this project is to simulate pollutant transport within a medium and subsequently identify the region where pollutant concentrations surpass a predetermined arbitrary threshold.
+
 ## Introduction
 
-This is a hybrid Next.js + Python app that uses Next.js as the frontend and Flask as the API backend. Deployment is made on Vercel with two different projects to handle the Serverless Function maximum size.
+This project is a Next.js + Python Flask web app. Deployment is made on Vercel with two different projects to handle the Serverless Function maximum size.
 
-Frontend: https://github.com/PopoDev/RW3D_Frontend
+Frontend (Next): https://github.com/PopoDev/RW3D_Frontend
 
-Backend: https://github.com/PopoDev/RW3D_Backend
+Backend (Flask): https://github.com/PopoDev/RW3D_Backend
+
+## Features
+
+- Random Walk: Utilizes random walk theory to simulate the movement of pollutants in a 3D space.
+- Physics Modeling: Incorporates pollutant transport principles from physics to ensure accurate and insightful simulations.
+- User-Friendly Interface: The web-based interface is intuitive and user-friendly, making it accessible to a wide audience.
+- Interactive Visualization: Provides visual representations of pollutant dispersion, helping users understand complex scenarios.
 
 ## How It Works
 
@@ -27,22 +45,12 @@ On localhost, the rewrite will be made to the `127.0.0.1:5328` port, which is wh
 
 In production, the Flask server is hosted as [Python serverless functions](https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/python) on Vercel.
 
-## Demo
-
-https://nextjs-flask-starter.vercel.app/
-
-## Deploy Your Own
-
-You can clone & deploy it to Vercel with one click:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?demo-title=Next.js%20Flask%20Starter&demo-description=Simple%20Next.js%20boilerplate%20that%20uses%20Flask%20as%20the%20API%20backend.&demo-url=https%3A%2F%2Fnextjs-flask-starter.vercel.app%2F&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F795TzKM3irWu6KBCUPpPz%2F44e0c6622097b1eea9b48f732bf75d08%2FCleanShot_2023-05-23_at_12.02.15.png&project-name=Next.js%20Flask%20Starter&repository-name=nextjs-flask-starter&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fpython%2Fnextjs-flask&from=vercel-examples-repo)
-
 ## Developing Locally
 
 You can clone & create this repo with the following command
 
 ```bash
-npx create-next-app nextjs-flask --example "https://github.com/vercel/examples/tree/main/python/nextjs-flask"
+git clone https://github.com/PopoDev/RW3D_Next_Flask.git
 ```
 
 ## Getting Started
@@ -71,12 +79,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 The Flask server will be running on [http://127.0.0.1:5328](http://127.0.0.1:5328) – feel free to change the port in `package.json` (you'll also need to update it in `next.config.js`).
 
-## Learn More
+## License
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Flask Documentation](https://flask.palletsprojects.com/en/1.1.x/) - learn about Flask features and API.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+This project is licensed under the MIT License
